@@ -1,10 +1,9 @@
 ::SettlementSituations <- {
 	ID = "mod_settlement_situations_tooltip",
-	Version = "0.1.0",
+	Version = "1.0.0-beta",
 	Name = "Settlement Situations Tooltip",
 	Modifiers = ::MSU.Class.OrderedMap()
 }
-
 ::SettlementSituations.Modifiers.PriceMult <- 1.0;
 ::SettlementSituations.Modifiers.BuyPriceMult <- 1.0;
 ::SettlementSituations.Modifiers.SellPriceMult <- 1.0;
@@ -22,7 +21,7 @@
 
 ::mods_registerMod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
 
-::mods_queue(::SettlementSituations.ID, "mod_msu(>=1.0.0-beta)", function()
+::mods_queue(::SettlementSituations.ID, "mod_msu(>1.0.0-beta.1)", function()
 {
 	local function green( _value )
 	{
