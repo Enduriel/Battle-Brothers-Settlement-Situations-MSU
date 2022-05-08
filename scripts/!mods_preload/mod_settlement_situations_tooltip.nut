@@ -2,46 +2,48 @@
 	ID = "mod_settlement_situations_tooltip",
 	Version = "0.1.0",
 	Name = "Settlement Situations Tooltip",
-	Icons = [
-		"PriceMult", // not sure if this is necessary
-		"BuyPriceMult",
-		"SellPriceMult",
-		"FoodPriceMult",
-		"MedicalPriceMult",
-		"BuildingPriceMult",
-		"IncensePriceMult",
-		"RarityMult",
-		"FoodRarityMult",
-		"MedicalRarityMult",
-		"MineralRarityMult",
-		"BuildingRarityMult",
-		"RecruitsMult"
-	]
+	Modifiers = ::MSU.Class.OrderedMap()
 }
+
+::SettlementSituations.Modifiers.PriceMult <- 1.0;
+::SettlementSituations.Modifiers.BuyPriceMult <- 1.0;
+::SettlementSituations.Modifiers.SellPriceMult <- 1.0;
+::SettlementSituations.Modifiers.FoodPriceMult <- 1.0;
+::SettlementSituations.Modifiers.MedicalPriceMult <- 1.0;
+::SettlementSituations.Modifiers.BuildingPriceMult <- 1.0;
+::SettlementSituations.Modifiers.IncensePriceMult <- 1.0;
+::SettlementSituations.Modifiers.BeastPartsPriceMult <- 1.0;
+::SettlementSituations.Modifiers.RarityMult <- 1.0;
+::SettlementSituations.Modifiers.FoodRarityMult <- 1.0;
+::SettlementSituations.Modifiers.MedicalRarityMult <- 1.0;
+::SettlementSituations.Modifiers.MineralRarityMult <- 1.0;
+::SettlementSituations.Modifiers.BuildingRarityMult <- 1.0;
+::SettlementSituations.Modifiers.RecruitsMult <- 1.0;
+
 ::mods_registerMod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
-
-local function green( _value )
-{
-	return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]"
-}
-
-local function red( _value )
-{
-	return "[color=" + ::Const.UI.Color.NegativeValue + "]" + _value + "[/color]"
-}
-
-local function moreGood( _change );
-{
-	return _change < 0 ? red(_change + "%") + " less" : green(_change + "%") + " more";
-}
-
-local function moreBad( _change )
-{
-	return _change < 0 ? green(_change + "%") + " less" : red(_change + "%") + " more";
-}
 
 ::mods_queue(::SettlementSituations.ID, "mod_msu(>=1.0.0-beta)", function()
 {
+	local function green( _value )
+	{
+		return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]"
+	}
+
+	local function red( _value )
+	{
+		return "[color=" + ::Const.UI.Color.NegativeValue + "]" + _value + "[/color]"
+	}
+
+	local function moreGood( _change )
+	{
+		return _change < 0 ? red(::Math.abs(_change) + "%") + " less" : green(::Math.abs(_change) + "%") + " more";
+	}
+
+	local function moreBad( _change )
+	{
+		return _change < 0 ? green(::Math.abs(_change) + "%") + " less" : red(::Math.abs(_change) + "%") + " more";
+	}
+
 	::SettlementSituations.getStringForPair <- function( _key, _value )
 	{
 		local change = ::Math.round(_value * 100 - 100);
@@ -67,8 +69,8 @@ local function moreBad( _change )
 				return moreGood(change) + " mediical supplies for sale.";
 			case "MineralRarityMult":
 				return moreGood(change) + " minerals for sale.";
-			case "BuildlingRarityMult":
-				return moreGood(change) + " building materials for sale.";
+			case "BuildingRarityMult":
+				return ::MSU.String.replace(moreGood(change), "less", "fewer") + " building materials for sale.";
 			case "RecruitsMult":
 				return ::MSU.String.replace(moreGood(change), "less", "fewer") + " recruits are available.";
 			default:
@@ -78,16 +80,16 @@ local function moreBad( _change )
 
 	::SettlementSituations.getIconForKey <- function( _key )
 	{
-		if (Icons.find(_modifierID) != null)
+		if (::SettlementSituations.Modifiers.containsKey(_key))
 		{
-			return "ui/mods/settlement_situations_tooltip/" + _modifierID + ".png"
+			return "ui/mods/settlement_situations_tooltip/" + _key + ".png"
 		}
 		return "ui/mods/settlement_situations_tooltip/RarityMult.png";
 	}
 
 	::SettlementSituations.getPluralBackgroundName <- function( _backgroundString )
 	{
-		local name = ::new("scripts/skills/backgrounds/" + _backgroundString).getName().tolower();
+		local name = ::MSU.String.replace(::new("scripts/skills/backgrounds/" + _backgroundString).getName().tolower(), "background: ", "");
 		if (name.find("man") != null)
 		{
 			name = ::MSU.String.replace(name, "man", "men");
@@ -104,7 +106,7 @@ local function moreBad( _change )
 		{
 			name += "s";
 		}
-		return name;
+		return ::MSU.String.capitalizeFirst(name);
 	}
 
 	::mods_hookBaseClass("entity/world/settlements/situations/situation", function (o)
@@ -120,14 +122,14 @@ local function moreBad( _change )
 			local ret = getTooltip();
 
 			// first get modifiers
-			local modifiers = ::new("scripts/entity/settlement_modifiers")
-			::MSU.Table.apply(modifiers, @(_key, _value) typeof _value == "float" ? 1.0 : _value);
+			local modifiers = clone ::SettlementSituations.Modifiers;
+
 			onUpdate(modifiers);
 			modifiers.SellPriceMult *= modifiers.PriceMult;
 			modifiers.BuyPriceMult *= modifiers.PriceMult;
-			modifiers.rawdelete("PriceMult")
+			delete modifiers.PriceMult;
 
-			local changedModifiers = ::MSU.Table.filter(function(_key, _value)
+			local changedModifiers = modifiers.filter(function(_key, _value, _idx)
 			{
 				if (typeof _value == "float") return _value != 1.0;
 				return false;
@@ -140,41 +142,47 @@ local function moreBad( _change )
 					type = "text",
 					icon = ::SettlementSituations.getIconForKey(key),
 					text = ::SettlementSituations.getStringForPair(key, value)
-				})
+				});
 			}
 
 			// then draft list
 			local draftList = [];
 			onUpdateDraftList(draftList);
-			local reducedList = {};
-			foreach (value in draftList)
+			if (draftList.len() != 0)
 			{
-				if (value in reducedList)
+				local reducedList = [];
+				local reducedListNames = [];
+				foreach (value in draftList)
 				{
-					reducedList[value] <- ::SettlementSituations.getPluralBackgroundName(value);
+					if (reducedList.find(value) == null)
+					{
+						reducedList.push(value)
+						reducedListNames.push(::SettlementSituations.getPluralBackgroundName(value))
+					}
 				}
-			}
 
-			local draftListSentence = "";
-			for (local i = reducedList.len() - 2; i > 0; --i)
-			{
-				draftListSentence += reducedList.pop() + ", "
-			}
-			if (draftList.len() == 2)
-			{
-				draftListSentence += reducedList[1] + " and " + reducedList[0];
-			}
-			else
-			{
-				draftListSentence += reducedList[0];
-			}
+				local draftListSentence = "";
+				for (local i = reducedListNames.len() - 2; i > 0; --i)
+				{
+					draftListSentence += reducedListNames.pop() + ", "
+				}
+				::MSU.Log.printData(reducedListNames);
+				if (reducedListNames.len() == 2)
+				{
+					draftListSentence += reducedListNames[1] + " and " + reducedListNames[0];
+				}
+				else
+				{
+					draftListSentence += reducedListNames[0];
+				}
 
-			ret.push({
-				id = ret.len() + 1,
-				type = "text",
-				icon = ::SettlementSituations.getIconForKey("RecruitsMult"),
-				text = draftListSentence + " are more likely to be available for hire."
-			})
+				ret.push({
+					id = ret.len() + 1,
+					type = "text",
+					icon = ::SettlementSituations.getIconForKey("RecruitsMult"),
+					text = draftListSentence + " are more likely to be available for hire."
+				})
+			}
 
 			return ret;
 		}
