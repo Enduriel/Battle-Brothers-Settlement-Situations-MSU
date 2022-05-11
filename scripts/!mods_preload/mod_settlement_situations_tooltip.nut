@@ -23,14 +23,15 @@
 
 ::mods_queue(::SettlementSituations.ID, "mod_msu(>1.0.0-beta.1)", function()
 {
+	::SettlementSituations.Mod <- ::MSU.Class.Mod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
 	local function green( _value )
 	{
-		return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]"
+		return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]";
 	}
 
 	local function red( _value )
 	{
-		return "[color=" + ::Const.UI.Color.NegativeValue + "]" + _value + "[/color]"
+		return "[color=" + ::Const.UI.Color.NegativeValue + "]" + _value + "[/color]";
 	}
 
 	local function moreGood( _change )
