@@ -1,6 +1,6 @@
 ::SettlementSituations <- {
 	ID = "mod_settlement_situations_msu",
-	Version = "1.0.0-beta.1",
+	Version = "1.0.0",
 	Name = "Settlement Situations Tooltip",
 	Modifiers = ::MSU.Class.OrderedMap()
 }
