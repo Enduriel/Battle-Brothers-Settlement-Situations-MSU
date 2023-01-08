@@ -80,7 +80,7 @@
 
 	::SettlementSituations.getIconForKey <- function( _key )
 	{
-		if (::SettlementSituations.Modifiers.containsKey(_key) && _key != "PriceMult")
+		if (::SettlementSituations.Modifiers.contains(_key) && _key != "PriceMult")
 		{
 			return "ui/mods/settlement_situations_tooltip/" + _key + ".png"
 		}
