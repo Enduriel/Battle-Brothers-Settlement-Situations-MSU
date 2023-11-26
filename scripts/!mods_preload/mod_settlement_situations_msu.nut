@@ -21,9 +21,12 @@
 
 ::mods_registerMod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
 
-::mods_queue(::SettlementSituations.ID, "mod_msu(>1.0.0-beta.1)", function()
+::mods_queue(::SettlementSituations.ID, "mod_msu(>=1.2.0-rc.3)", function()
 {
 	::SettlementSituations.Mod <- ::MSU.Class.Mod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
+	::SettlementSituations.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/Enduriel/Battle-Brothers-Settlement-Situations-MSU");
+	::SettlementSituations.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
+	::SettlementSituations.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/551");
 	local function green( _value )
 	{
 		return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]";
