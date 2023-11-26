@@ -19,9 +19,10 @@
 ::SettlementSituations.Modifiers.BuildingRarityMult <- 1.0;
 ::SettlementSituations.Modifiers.RecruitsMult <- 1.0;
 
-::mods_registerMod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
+::SettlementSituations.HooksMod <- ::Hooks.register(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
+::SettlementSituations.HooksMod.require("mod_msu >= 1.2.0-rc.3");
 
-::mods_queue(::SettlementSituations.ID, "mod_msu(>=1.2.0-rc.3)", function()
+::SettlementSituations.HooksMod.queue(">mod_msu", function()
 {
 	::SettlementSituations.Mod <- ::MSU.Class.Mod(::SettlementSituations.ID, ::SettlementSituations.Version, ::SettlementSituations.Name);
 	::SettlementSituations.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/Enduriel/Battle-Brothers-Settlement-Situations-MSU");
@@ -109,22 +110,15 @@
 		return ::MSU.String.capitalizeFirst(name);
 	}
 
-	::mods_hookBaseClass("entity/world/settlements/situations/situation", function (o)
+	::SettlementSituations.HooksMod.hook("scripts/entity/world/settlements/situations/situation", function (q)
 	{
-		local onUpdate = ::mods_getMember(o, "onUpdate");
-		local onUpdateDraftList = ::mods_getMember(o, "onUpdateDraftList");
-
-		o = o[o.SuperName];
-
-		local getTooltip = o.getTooltip;
-		o.getTooltip = function()
-		{
-			local ret = getTooltip();
+		q.getTooltip = @(__original) function() {
+			local ret = __original();
 
 			// first get modifiers
 			local modifiers = clone ::SettlementSituations.Modifiers;
 
-			onUpdate(modifiers);
+			this.onUpdate(modifiers);
 			modifiers.SellPriceMult *= modifiers.PriceMult;
 			modifiers.BuyPriceMult *= modifiers.PriceMult;
 			delete modifiers.PriceMult;
@@ -147,7 +141,7 @@
 
 			// then draft list
 			local draftList = [];
-			onUpdateDraftList(draftList);
+			this.onUpdateDraftList(draftList);
 			if (draftList.len() != 0)
 			{
 				local reducedList = [];
