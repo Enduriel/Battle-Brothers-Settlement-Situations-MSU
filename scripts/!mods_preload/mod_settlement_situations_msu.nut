@@ -160,7 +160,6 @@
 				{
 					draftListSentence += reducedListNames.pop() + ", "
 				}
-				::MSU.Log.printData(reducedListNames);
 				if (reducedListNames.len() == 2)
 				{
 					draftListSentence += reducedListNames[1] + " and " + reducedListNames[0];
