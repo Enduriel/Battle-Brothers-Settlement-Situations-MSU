@@ -37,25 +37,30 @@
 		return _change < 0 ? ::MSU.Text.colorGreen(::Math.abs(_change) + "%") + " less" : ::MSU.Text.colorRed(::Math.abs(_change) + "%") + " more";
 	}
 
+	local function moreLessToHigherLower( _str )
+	{
+		return ::String.replace(::String.replace(_str, "less", "lower"), "more", "higher")
+	}
+
 	::SettlementSituations.getStringForPair <- function( _key, _value )
 	{
 		local change = ::Math.round(_value * 100 - 100);
 		switch (_key)
 		{
 			case "BuyPriceMult":
-				return "Selling items for " + moreBad(change) + ".";
+				return moreLessToHigherLower(moreBad(change)) + " item costs.";
 			case "SellPriceMult":
-				return "Buying items for " + moreGood(change) + ".";
+				return moreGood(change) + " profit from selling items."
 			case "FoodPriceMult":
-				return "Trading food for " + moreBad(change) + ".";
+				return moreLessToHigherLower(moreBad(change)) + " food prices.";
 			case "MedicalPriceMult":
-				return "Selling medical supplies for " + moreBad(change) + ".";
+				return moreLessToHigherLower(moreBad(change)) + " medical supplies prices.";
 			case "BuildingPriceMult":
-				return "Trading building materials for " + moreGood(change) + ".";
+				return moreLessToHigherLower(moreGood(change)) + " building material prices.";
 			case "IncensePriceMult":
-				return "Trading Incense for " + moreGood(change) + ".";
+				return moreLessToHigherLower(moreGood(change)) + " incencse prices."
 			case "RarityMult":
-				return ::MSU.String.replace(moreGood(change), "less", "fewer") + " items for sale.";
+				return ::String.replace(moreGood(change), "less", "fewer") + " items for sale.";
 			case "FoodRarityMult":
 				return moreGood(change) + " food for sale.";
 			case "MedicalRarityMult":
@@ -63,9 +68,9 @@
 			case "MineralRarityMult":
 				return moreGood(change) + " minerals for sale.";
 			case "BuildingRarityMult":
-				return ::MSU.String.replace(moreGood(change), "less", "fewer") + " building materials for sale.";
+				return ::String.replace(moreGood(change), "less", "fewer") + " building materials for sale.";
 			case "RecruitsMult":
-				return ::MSU.String.replace(moreGood(change), "less", "fewer") + " recruits are available.";
+				return ::String.replace(moreGood(change), "less", "fewer") + " recruits are available.";
 			default:
 				return _key + " " + change + "%";
 		}
