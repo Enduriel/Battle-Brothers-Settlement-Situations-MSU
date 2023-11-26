@@ -47,6 +47,8 @@
 		local change = ::Math.round(_value * 100 - 100);
 		switch (_key)
 		{
+			case "BeastPartsPriceMult":
+				return moreGood(change) + " profit from selling beast trophies.";
 			case "BuyPriceMult":
 				return moreLessToHigherLower(moreBad(change)) + " item costs.";
 			case "SellPriceMult":
@@ -87,18 +89,18 @@
 
 	::SettlementSituations.getPluralBackgroundName <- function( _backgroundString )
 	{
-		local name = ::MSU.String.replace(::new("scripts/skills/backgrounds/" + _backgroundString).getName().tolower(), "background: ", "");
+		local name = ::String.replace(::new("scripts/skills/backgrounds/" + _backgroundString).getName().tolower(), "background: ", "");
 		if (name.find("man") != null)
 		{
-			name = ::MSU.String.replace(name, "man", "men");
+			name = ::String.replace(name, "man", "men");
 		}
 		else if (name.find("hief") != null)
 		{
-			name = ::MSU.String.replace(name, "hief", "hieves");
+			name = ::String.replace(name, "hief", "hieves");
 		}
 		else if (name.find("killer") != null)
 		{
-			name = ::MSU.String.replace(name, "killer", "killers");
+			name = ::String.replace(name, "killer", "killers");
 		}
 		else
 		{
