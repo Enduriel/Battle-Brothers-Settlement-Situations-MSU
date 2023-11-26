@@ -27,24 +27,14 @@
 	::SettlementSituations.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/Enduriel/Battle-Brothers-Settlement-Situations-MSU");
 	::SettlementSituations.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 	::SettlementSituations.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/551");
-	local function green( _value )
-	{
-		return "[color=" + ::Const.UI.Color.PositiveValue + "]" + _value + "[/color]";
-	}
-
-	local function red( _value )
-	{
-		return "[color=" + ::Const.UI.Color.NegativeValue + "]" + _value + "[/color]";
-	}
-
 	local function moreGood( _change )
 	{
-		return _change < 0 ? red(::Math.abs(_change) + "%") + " less" : green(::Math.abs(_change) + "%") + " more";
+		return _change < 0 ? ::MSU.Text.colorRed(::Math.abs(_change) + "%") + " less" : ::MSU.Text.colorGreen(::Math.abs(_change) + "%") + " more";
 	}
 
 	local function moreBad( _change )
 	{
-		return _change < 0 ? green(::Math.abs(_change) + "%") + " less" : red(::Math.abs(_change) + "%") + " more";
+		return _change < 0 ? ::MSU.Text.colorGreen(::Math.abs(_change) + "%") + " less" : ::MSU.Text.colorRed(::Math.abs(_change) + "%") + " more";
 	}
 
 	::SettlementSituations.getStringForPair <- function( _key, _value )
