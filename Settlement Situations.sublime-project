@@ -10,17 +10,5 @@
 		{
 			"path": "..\\mod_msu",
 		}
-	],
-	"build_systems": [
-		{
-			"name" : "Update Mod",
-			"working_dir" : "$project_path",
-			"cmd": ["python", "-u", "../updateMod.py"],
-		},
-		{
-			"name" : "Update Mod and Launch",
-			"working_dir" : "$project_path",
-			"shell_cmd" : "python -u ../updateMod.py && \"D:/SteamLibrary/steamapps/common/Battle Brothers/win32/BattleBrothers.exe\"",
-		}
-	],
+	]
 }
