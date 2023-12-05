@@ -61,13 +61,13 @@
 			case "BuildingPriceMult":
 				return moreLessToHigherLower(moreGood(change)) + " building material prices.";
 			case "IncensePriceMult":
-				return moreLessToHigherLower(moreGood(change)) + " incencse prices."
+				return moreLessToHigherLower(moreGood(change)) + " incense prices."
 			case "RarityMult":
 				return ::String.replace(moreGood(change), "less", "fewer") + " items for sale.";
 			case "FoodRarityMult":
 				return moreGood(change) + " food for sale.";
 			case "MedicalRarityMult":
-				return moreGood(change) + " mediical supplies for sale.";
+				return moreGood(change) + " medical supplies for sale.";
 			case "MineralRarityMult":
 				return moreGood(change) + " minerals for sale.";
 			case "BuildingRarityMult":
